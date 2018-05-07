@@ -102,7 +102,7 @@ function stop_cluster {
   echo "==== Killing the cluster ===="
   ./oc cluster down
   if [ ! -z "$IMAGE_INSIDE_OPENSHIFT" ]; then
-    sudo docker rmi $IMAGE_INSIDE_OPENSHIFT
+    docker rmi $IMAGE_INSIDE_OPENSHIFT
   fi
 }
 
@@ -113,9 +113,9 @@ function build_images {
   REGISTRY_IP=`./oc get svc/docker-registry -o yaml | grep clusterIP: | awk '{print $2}'`
   IMAGE="${REGISTRY_IP}:5000/myproject/$OPENSHIFT_COMPONENT_NAME"
   login_as_developer
-  sudo docker build --no-cache --force-rm -t $IMAGE ../server
-  sudo docker login -u $(./oc whoami) -p $(./oc whoami -t) ${REGISTRY_IP}:5000
-  sudo docker push ${IMAGE}
+  docker build --no-cache --force-rm -t $IMAGE ../server
+  docker login -u $(./oc whoami) -p $(./oc whoami -t) ${REGISTRY_IP}:5000
+  docker push ${IMAGE}
   IMAGE_INSIDE_OPENSHIFT=$IMAGE
 }
 
